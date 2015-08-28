@@ -22,6 +22,7 @@ include(CheckIncludeFile)
 include(CheckCSourceCompiles)
 enable_testing()
 
+
 check_include_file(sys/types.h HAVE_SYS_TYPES_H)
 check_include_file(stdint.h    HAVE_STDINT_H)
 check_include_file(stddef.h    HAVE_STDDEF_H)
@@ -221,6 +222,10 @@ endif()
 if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL )
     install(FILES ${ZLIB_PUBLIC_HDRS} DESTINATION "${INSTALL_INC_DIR}")
 endif()
+
+if (WIN32)
+        SET(CPACK_SYSTEM_NAME "Windows")
+endif (WIN32)
 
 set(CPACK_GENERATOR "ZIP")
 include(CPack)
