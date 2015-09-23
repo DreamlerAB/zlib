@@ -215,6 +215,7 @@ endif()
 
 if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL )
     install(TARGETS zlib zlibstatic
+        EXPORT zlib_targets
         RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
         ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
         LIBRARY DESTINATION "${INSTALL_LIB_DIR}" )
@@ -226,6 +227,43 @@ endif()
 if (WIN32)
         SET(CPACK_SYSTEM_NAME "Windows")
 endif (WIN32)
+
+# Create cmake files for import
+export(EXPORT zlib_targets
+    FILE ZLIBTargets.cmake
+)
+
+install(EXPORT zlib_targets
+    FILE "ZLIBTargets.cmake"
+    DESTINATION lib/cmake
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/ZLIBConfigVersion.cmake"
+    VERSION "${ZLIB_FULL_VERSION}"
+    COMPATIBILITY AnyNewerVersion
+)
+configure_file("${CMAKE_SOURCE_DIR}/cmake/ZLIBConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/ZLIBConfig.cmake"
+    COPYONLY
+)
+
+install(
+    FILES
+    cmake/ZLIBConfig.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/ZLIBConfigVersion.cmake"
+    DESTINATION lib/cmake
+    COMPONENT Devel
+)
+
+install(
+    FILES
+    cmake/ZLIBIncludes.cmake
+    DESTINATION lib/cmake
+    COMPONENT Devel
+)
+# Create cmake files for import
 
 set(CPACK_GENERATOR "ZIP")
 include(CPack)
